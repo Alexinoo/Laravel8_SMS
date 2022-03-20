@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Student;
 
 class StudentController extends Controller
 {
@@ -13,7 +14,10 @@ class StudentController extends Controller
      */
     public function index()
     {
-        //
+        $vStudents = Student::all();
+        return view('Student.index', [
+            'students' => $vStudents,
+        ]);
     }
 
     /**
@@ -23,7 +27,8 @@ class StudentController extends Controller
      */
     public function create()
     {
-        //
+
+        return view('Student.create');
     }
 
     /**
@@ -34,7 +39,15 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $student = new Student;
+        $student->cne = $request->input('cne');
+        $student->firstName = $request->input('firstName');
+        $student->secondName = $request->input('secondName');
+        $student->age = $request->input('age');
+        $student->speciality = $request->input('speciality');
+        $student->save();
+
+        return redirect('/');
     }
 
     /**
@@ -45,7 +58,16 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        //
+        //SIngle student
+        $vStudent = Student::find($id);
+
+        //All students
+        $vStudents = Student::all();
+
+        return view('Student.show', [
+            'student'  => $vStudent,
+            'students'  => $vStudents,
+        ]);
     }
 
     /**
@@ -56,7 +78,16 @@ class StudentController extends Controller
      */
     public function edit($id)
     {
-        //
+        // Find Student with $id
+        $vStudent = Student::find($id);
+
+        //All students
+        $vStudents = Student::all();
+
+        return view('Student.edit', [
+            'student'  => $vStudent,
+            'students'  => $vStudents,
+        ]);
     }
 
     /**
@@ -68,7 +99,18 @@ class StudentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // Find Student with $id
+        $student = Student::find($id);
+
+        //Fetch from edit view
+        $student->cne = $request->input('cne');
+        $student->firstName = $request->input('firstName');
+        $student->secondName = $request->input('secondName');
+        $student->age = $request->input('age');
+        $student->speciality = $request->input('speciality');
+        $student->update();
+
+        return redirect('/');
     }
 
     /**
@@ -79,6 +121,11 @@ class StudentController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // Find Student with $id
+        $student = Student::find($id);
+
+        $student->delete();
+
+        return redirect('/');
     }
 }
